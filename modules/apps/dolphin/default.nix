@@ -2,10 +2,9 @@
 
 let
   cfg = config.programs.dolphin;
-
 in
 {
-  options.programs.dolphin= {
+  options.programs.dolphin = {
     enable = lib.mkEnableOption "configuration module for KDE dolphin";
     package =
       lib.mkPackageOption pkgs
@@ -22,28 +21,67 @@ in
           '';
         };
 
-    foo = lib.types.submodule {
-      bar = lib.mkOption {
-        type = lib.types.nullOr lib.types.str;
-        default = null;
-        example = "example value";
-        description = ''
-          Description for the option
-        '';
+    interface = {
+      foldersAndTabs = {
+        startupLocation = lib.mkOption {
+          type = lib.types.nullOr lib.types.str;
+          default = null;
+
+          example = "/home/user";
+          description = ''
+            The absolute folder path to open on launch. If set to null, the folders, tabs, and window state from last time will be restored.
+          '';
+        };
+
+        launchInNewTab = lib.mkOption {
+          type = lib.types.nullOr lib.types.bool;
+          default = null;
+
+          example = true;
+          description = ''
+            When Dolphin is launched externally, it can either open a tab in an existing window or create a new window.
+          '';
+        };
+
+        window = {
+          fullPathInTitle = lib.mkOption {
+            type = lib.types.nullOr lib.types.bool;
+            default = null;
+          
+            example = true;
+            description = ''
+              Show the absolute folder path (e.g. /home/user/Documents) in the application title, instead of the basename (e.g Documents).
+            '';
+          };
+
+          showFilterBar = lib.mkOption {
+            type = lib.types.nullOr lib.types.bool;
+            default = null;
+          
+            example = true;
+            description = ''
+              Launch with the Filter Bar shown by default.
+            '';
+          };
+        };
+
       };
     };
   };
 
+  # Write the config file
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-    programs.plasma.configFile."dolphinrc" =
-      let
-        some_helper_function = i: i;
-      in
-      lib.mkMerge [
-        (lib.mkIf (cfg.foo.bar != null) {
-          FooCategory.BarOption.value = cfg.foo.bar;
-        })
-      ];
+    programs.plasma.configFile."dolphinrc" = {
+      # Interface > Folders & Tabs
+      General = with cfg.interface.foldersAndTabs; {
+        RememberOpenedTabs = startupLocation == null;
+        HomeUrl = startupLocation;
+
+        OpenExternallyCalledFolderInNewTab = launchInNewTab;
+        ShowFullPathInTitlebar = window.fullPathInTitle;
+        FilterBar = window.showFilterBar;
+      };
+    };
   };
 }
