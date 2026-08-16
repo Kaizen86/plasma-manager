@@ -46,8 +46,9 @@ Settings in `~/.config/dolphinrc`, as of Dolphin version 26.04.3
 			- `CloseSplitViewChoice=InactiveView`
 		- Close the right pane
 			- `CloseSplitViewChoice=RightView`
-	- Switch between views with Tab key
-		- `UseTabForSwitchingSplitView=true`
+	~~- Switch between views with Tab key
+		- `UseTabForSwitchingSplitView=true`~~
+		- Will be removed soon
 	- Open new  windows in split view mode
 		- `SplitView=true`
 
