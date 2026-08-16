@@ -4,10 +4,10 @@ let
   cfg = config.programs.dolphin;
 in
 {
-  options.programs.dolphin = {
-    enable = lib.mkEnableOption "configuration module for KDE dolphin";
+  options.programs.dolphin = with lib; {
+    enable = mkEnableOption "configuration module for KDE dolphin";
     package =
-      lib.mkPackageOption pkgs
+      mkPackageOption pkgs
         [
           "kdePackages"
           "dolphin"
@@ -21,22 +21,22 @@ in
           '';
         };
 
+    # https://invent.kde.org/system/dolphin/-/blob/master/src/settings/dolphin_generalsettings.kcfg
+
     interface = {
       foldersAndTabs = {
-        startupLocation = lib.mkOption {
-          type = lib.types.nullOr lib.types.str;
+        startupLocation = mkOption {
+          type = types.nullOr types.str;
           default = null;
-
           example = "/home/user";
           description = ''
             The absolute folder path to open on launch. If set to null, the folders, tabs, and window state from last time will be restored.
           '';
         };
 
-        launchInNewTab = lib.mkOption {
-          type = lib.types.nullOr lib.types.bool;
-          default = null;
-
+        launchInNewTab = mkOption {
+          type = types.bool;
+          default = false;
           example = true;
           description = ''
             When Dolphin is launched externally, it can either open a tab in an existing window or create a new window.
@@ -44,20 +44,18 @@ in
         };
 
         window = {
-          fullPathInTitle = lib.mkOption {
-            type = lib.types.nullOr lib.types.bool;
-            default = null;
-          
+          fullPath = mkOption {
+            type = types.bool;
+            default = false;
             example = true;
             description = ''
               Show the absolute folder path (e.g. /home/user/Documents) in the application title, instead of the basename (e.g Documents).
             '';
           };
 
-          showFilterBar = lib.mkOption {
-            type = lib.types.nullOr lib.types.bool;
-            default = null;
-          
+          showFilterBar = mkOption {
+            type = types.bool;
+            default = false;
             example = true;
             description = ''
               Launch with the Filter Bar shown by default.
@@ -79,7 +77,7 @@ in
         HomeUrl = startupLocation;
 
         OpenExternallyCalledFolderInNewTab = launchInNewTab;
-        ShowFullPathInTitlebar = window.fullPathInTitle;
+        ShowFullPathInTitlebar = window.fullPath;
         FilterBar = window.showFilterBar;
       };
     };
