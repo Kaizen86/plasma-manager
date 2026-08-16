@@ -161,6 +161,50 @@ in
         SplitView = splitView.default;
         CloseSplitViewChoice = splitView.close;
       };
+
+      # Interface > Previews
+      PreviewSettings = {};
+    } // {
+
+      # Interface > Confirmations
+      General = {};
+      "Notification Messages" = {};
+
+      # Interface > Panels
+      InformationalPanel = {};
+    } // {
+
+      # Interface > Status & Location bars
+      General = {};
+    } // {
+
+      # View > General
+      General = {};
+    } // {
+
+      # View > Content Display
+      General = {};
+      ContentDisplay = {};
+
+      # View > Icons view mode
+      IconsMode = {};
+
+      # View > Compact view mode
+      CompactMode = {};
+
+      # View > Details view mode
+      DetailsMode = {};
+    };
+  } // {
+    # Context Menu
+    # Not sure how much of this I will end up implementing...
+    programs.plasma.configFile = {
+      "dolphinrc" = {
+        ContextMenu = {};
+        VersionControl = {};
+      };
+
+      "kservicemenurc".Show = {};
     };
   };
 }
