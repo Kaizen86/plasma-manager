@@ -30,7 +30,8 @@ in
           default = null;
           example = "/home/user";
           description = ''
-            The absolute folder path to open on launch. If set to null, the folders, tabs, and window state from last time will be restored.
+            The absolute folder path to open on launch.
+            If set to null, the folders, tabs, and window state from last time will be restored.
           '';
         };
 
@@ -73,7 +74,7 @@ in
             type = types.bool;
             default = true;
             description = ''
-              Should tabs have a button to close them
+              Should tabs have a button to close them.
             '';
           };
 
