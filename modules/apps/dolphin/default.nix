@@ -137,6 +137,146 @@ in
           };
         };
       };
+
+      previews = let 
+        plugins = [
+          "appimagethumbnail"
+          "audiothumbnail"
+          "blenderthumbnail"
+          "comicbookthumbnail"
+          "cursorthumbnail"
+          "djvuthumbnail"
+          "ebookthumbnail"
+          "exrthumbnail"
+          "directorythumbnail"
+          "fontthumbnail"
+          "FreeCAD"
+          "imagethumbnail"
+          "jpegthumbnail"
+          "kraorathumbnail"
+          "windowsexethumbnail"
+          "windowsimagethumbnail"
+          "mltpreview"
+          "mobithumbnail"
+          "opendocumentthumbnail"
+          "gsthumbnail"
+          "rawthumbnail"
+          "svgthumbnail"
+          "textthumbnail"
+          "ffmpegthumbs"
+        ];
+        
+      in mkOption {
+        type = types.listOf types.str;
+        default = builtins.filter (i: i != "textthumbnail") plugins;
+        example = plugins;
+        description = ''
+          List of preview plugins to use. Default is all except for "textthumbnail".
+        '';
+        apply = val: builtins.concatStringsSep "," val;
+      };
+
+      confirmations = {
+        closingWithMultipleTabs = mkOption {
+          type = types.bool;
+          default = true;
+          example = false;
+          description = ''
+            Confirm closing windows with multiple tabs.
+          '';
+        };
+
+        closingWithTerminal = mkOption {
+          type = types.bool;
+          default = true;
+          example = false;
+          description = ''
+            Confirm closing windows with a program running in the Terminal panel.
+          '';
+        };
+
+        openingManyFolders = mkOption {
+          type = types.bool;
+          default = true;
+          example = false;
+          description = ''
+            Confirm opening many folders at once.
+          '';
+        };
+
+        openingManyTerminals = mkOption {
+          type = types.bool;
+          default = true;
+          example = false;
+          description = ''
+            Confirm opening many terminals at once.
+          '';
+        };
+        
+        administrator = mkOption {
+          type = types.bool;
+          default = true;
+          example = false;
+          description = ''
+            Warn when switching to act as an administrator.
+          '';
+        };
+        
+        renamingFileType = mkOption {
+          type = types.bool;
+          default = true;
+          example = false;
+          description = ''
+            Warn when changing a file's extension.
+          '';
+        };
+      };
+
+      # Currently only one type of panel
+      # src/panels/information/dolphin_informationpanelsettings.kcfg
+      panels.information = {
+        showPreviews = mkOption {
+          type = types.bool;
+          default = true;
+          example = false;
+          description = ''
+            Enables file previews by default.
+          '';
+        };
+
+        autoPlayMedia = mkOption {
+          type = types.bool;
+          default = false;
+          example = true;
+          description = ''
+            For previews of video files, begin playback automatically.
+          '';
+        };
+
+        showHovered = mkOption {
+          type = types.bool;
+          default = true;
+          example = false;
+          description = ''
+            Allow hovering over a file to show its information.
+          '';
+        };
+
+        dateFormat = mkOption {
+          type = types.enum [ "long" "short" ];
+          default = "long";
+          example = "short";
+          description = ''
+            Dates can either be displayed in a long or short format.
+            long: Wednesday, 28 February 2024 at 10:00
+            short: 28/02/2024 at 10:00
+          '';
+          apply = val: {
+            "long" = "LongFormat";
+            "short" = "ShortFormat";
+          }.${val};
+        };
+      };
     };
   };
 
@@ -163,15 +303,30 @@ in
       };
 
       # Interface > Previews
-      PreviewSettings = {};
+      PreviewSettings.Plugins = cfg.interface.previews;
     } // {
 
       # Interface > Confirmations
-      General = {};
-      "Notification Messages" = {};
+      General = with cfg.interface.confirmations; {
+        ConfirmClosingMultipleTabs = closingWithMultipleTabs;
+        ConfirmClosingTerminalRunningProgram = closingWithTerminal;
+      };
+      "Notification Messages" = with cfg.interface.confirmations; {
+        ConfirmOpenManyFolders = openingManyFolders;
+        ConfirmOpenManyTerminals = openingManyTerminals;
+        # Oddly, this one does not appear in any Dolphin .kcfg
+        # Looks to be hardcoded in Dolphin src/admin/workerintegration.h
+        warnAboutRisksBeforeActingAsAdmin = administrator;
+        ConfirmRenameFileType = renamingFileType;
+      };
 
       # Interface > Panels
-      InformationalPanel = {};
+      InformationalPanel = with cfg.interface.panels.information; {
+        previewsShown = showPreviews;
+        previewsAutoPlay = autoPlayMedia;
+        showHovered = showHovered;
+        dateFormat = dateFormat;
+      };
     } // {
 
       # Interface > Status & Location bars
@@ -195,6 +350,7 @@ in
       # View > Details view mode
       DetailsMode = {};
     };
+
   } // {
     # Context Menu
     # Not sure how much of this I will end up implementing...
