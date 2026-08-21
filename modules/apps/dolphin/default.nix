@@ -1,5 +1,12 @@
 { config, lib, pkgs, ... }:
 
+# Default values are set for almost every option, mirroring Dolphin's defaults.
+# I chose to do this because of a limitation in plasma-manager; setting a value
+# to null will *not* remove it from dolphinrc, so any previously-set options will persist.
+# I don't know of a way around this, so I added option defaults for reproducibility,
+# but this does unfortunately mean anything the user has set before enabling this
+# module will be overwritten with the defaults.
+
 let
   cfg = config.programs.dolphin;
 in
