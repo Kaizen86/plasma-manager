@@ -37,7 +37,6 @@ in
         launchInNewTab = mkOption {
           type = types.bool;
           default = false;
-          example = true;
           description = ''
             When Dolphin is launched externally, it can either open a tab in an existing window or create a new window.
           '';
@@ -47,7 +46,6 @@ in
           fullPath = mkOption {
             type = types.bool;
             default = false;
-            example = true;
             description = ''
               Show the absolute folder path (e.g. /home/user/Documents) in the application title, instead of the basename (e.g Documents).
             '';
@@ -56,7 +54,6 @@ in
           showFilterBar = mkOption {
             type = types.bool;
             default = false;
-            example = true;
             description = ''
               Should the Filter Bar be shown by default.
             '';
@@ -67,7 +64,6 @@ in
           alwaysShow = mkOption {
             type = types.bool;
             default = false;
-            example = true;
             description = ''
               Should the tab bar always be shown, even when there is only one tab.
             '';
@@ -76,14 +72,13 @@ in
           closeButtons = mkOption {
             type = types.bool;
             default = true;
-            example = false;
             description = ''
               Should tabs have a button to close them
             '';
           };
 
           width = mkOption {
-            type = types.enum [ "adapt" "fixed" "full" ];
+            type = types.enum [ "adapt" "fixed" "wide" ];
             default = "adapt";
             example = "fixed";
             description = ''
@@ -93,7 +88,7 @@ in
               wide: Tabs span the available width
             '';
             apply = val: {
-              "auto" = "AutoSize";
+              "adapt" = "AutoSize";
               "fixed" = "FixedWidth";
               "wide" = "FullWidth";
             }.${val};
@@ -102,7 +97,6 @@ in
           openAtEnd = mkOption {
             type = types.bool;
             default = false;
-            example = true;
             description = ''
               Should new tabs be placed at end of tab bar, instead of next to current tab.
             '';
@@ -113,7 +107,7 @@ in
           close = mkOption {
             type = types.enum [ "active" "inactive" "right" ];
             default = "active";
-            example = true;
+            example = "inactive";
             description = ''
               When leaving split-view mode, which pane should be closed.
               active: Close the selected pane
@@ -130,7 +124,6 @@ in
           default = mkOption {
             type = types.bool;
             default = false;
-            example = true;
             description = ''
               Open new windows in split-view mode
             '';
@@ -171,7 +164,7 @@ in
         default = builtins.filter (i: i != "textthumbnail") plugins;
         example = plugins;
         description = ''
-          List of preview plugins to use. Default is all except for "textthumbnail".
+          List of preview plugins to use. Default is all except "textthumbnail".
         '';
         apply = val: builtins.concatStringsSep "," val;
       };
@@ -180,7 +173,6 @@ in
         closingWithMultipleTabs = mkOption {
           type = types.bool;
           default = true;
-          example = false;
           description = ''
             Confirm closing windows with multiple tabs.
           '';
@@ -189,7 +181,6 @@ in
         closingWithTerminal = mkOption {
           type = types.bool;
           default = true;
-          example = false;
           description = ''
             Confirm closing windows with a program running in the Terminal panel.
           '';
@@ -198,7 +189,6 @@ in
         openingManyFolders = mkOption {
           type = types.bool;
           default = true;
-          example = false;
           description = ''
             Confirm opening many folders at once.
           '';
@@ -207,7 +197,6 @@ in
         openingManyTerminals = mkOption {
           type = types.bool;
           default = true;
-          example = false;
           description = ''
             Confirm opening many terminals at once.
           '';
@@ -216,7 +205,6 @@ in
         administrator = mkOption {
           type = types.bool;
           default = true;
-          example = false;
           description = ''
             Warn when switching to act as an administrator.
           '';
@@ -225,7 +213,6 @@ in
         renamingFileType = mkOption {
           type = types.bool;
           default = true;
-          example = false;
           description = ''
             Warn when changing a file's extension.
           '';
@@ -233,12 +220,11 @@ in
       };
 
       # Currently only one type of panel
-      # src/panels/information/dolphin_informationpanelsettings.kcfg
+      # https://invent.kde.org/system/dolphin/-/blob/master/src/panels/information/dolphin_informationpanelsettings.kcfg
       panels.information = {
         showPreviews = mkOption {
           type = types.bool;
           default = true;
-          example = false;
           description = ''
             Enables file previews by default.
           '';
@@ -247,7 +233,6 @@ in
         autoPlayMedia = mkOption {
           type = types.bool;
           default = false;
-          example = true;
           description = ''
             For previews of video files, begin playback automatically.
           '';
@@ -256,7 +241,6 @@ in
         showHovered = mkOption {
           type = types.bool;
           default = true;
-          example = false;
           description = ''
             Allow hovering over a file to show its information.
           '';
@@ -285,75 +269,75 @@ in
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
     programs.plasma.configFile."dolphinrc" = lib.foldr lib.recursiveUpdate {} [
       {
-      # Interface > Folders & Tabs
-      General = with cfg.interface.foldersAndTabs; {
-        RememberOpenedTabs = startupLocation == null;
-        HomeUrl = startupLocation;
+        # Interface > Folders & Tabs
+        General = with cfg.interface.foldersAndTabs; {
+          RememberOpenedTabs = startupLocation == null;
+          HomeUrl = startupLocation;
 
-        OpenExternallyCalledFolderInNewTab = launchInNewTab;
-        ShowFullPathInTitlebar = window.fullPath;
-        FilterBar = window.showFilterBar;
+          OpenExternallyCalledFolderInNewTab = launchInNewTab;
+          ShowFullPathInTitlebar = window.fullPath;
+          FilterBar = window.showFilterBar;
 
-        AlwaysShowTabBar = tabs.alwaysShow;
-        ShowCloseButtonOnTabs = tabs.closeButtons;
-        TabStyle = tabs.width;
-        OpenNewTabAfterLastTab = tabs.openAtEnd;
+          AlwaysShowTabBar = tabs.alwaysShow;
+          ShowCloseButtonOnTabs = tabs.closeButtons;
+          TabStyle = tabs.width;
+          OpenNewTabAfterLastTab = tabs.openAtEnd;
 
-        SplitView = splitView.default;
-        CloseSplitViewChoice = splitView.close;
-      };
+          SplitView = splitView.default;
+          CloseSplitViewChoice = splitView.close;
+        };
 
-      # Interface > Previews
-      PreviewSettings.Plugins = cfg.interface.previews;
+        # Interface > Previews
+        PreviewSettings.Plugins = cfg.interface.previews;
       }
       {
-      # Interface > Confirmations
-      General = with cfg.interface.confirmations; {
-        ConfirmClosingMultipleTabs = closingWithMultipleTabs;
-        ConfirmClosingTerminalRunningProgram = closingWithTerminal;
-      };
-      "Notification Messages" = with cfg.interface.confirmations; {
-        ConfirmOpenManyFolders = openingManyFolders;
-        ConfirmOpenManyTerminals = openingManyTerminals;
-        # Oddly, this one does not appear in any Dolphin .kcfg
-        # Looks to be hardcoded in Dolphin src/admin/workerintegration.h
-        warnAboutRisksBeforeActingAsAdmin = administrator;
-        ConfirmRenameFileType = renamingFileType;
-      };
+        # Interface > Confirmations
+        General = with cfg.interface.confirmations; {
+          ConfirmClosingMultipleTabs = closingWithMultipleTabs;
+          ConfirmClosingTerminalRunningProgram = closingWithTerminal;
+        };
+        "Notification Messages" = with cfg.interface.confirmations; {
+          ConfirmOpenManyFolders = openingManyFolders;
+          ConfirmOpenManyTerminals = openingManyTerminals;
+          # Oddly, this one does not appear in any Dolphin .kcfg
+          # Looks to be hardcoded in Dolphin src/admin/workerintegration.h
+          warnAboutRisksBeforeActingAsAdmin = administrator;
+          ConfirmRenameFileType = renamingFileType;
+        };
 
-      # Interface > Panels
-      InformationalPanel = with cfg.interface.panels.information; {
-        previewsShown = showPreviews;
-        previewsAutoPlay = autoPlayMedia;
-        showHovered = showHovered;
-        dateFormat = dateFormat;
-      };
+        # Interface > Panels
+        InformationalPanel = with cfg.interface.panels.information; {
+          previewsShown = showPreviews;
+          previewsAutoPlay = autoPlayMedia;
+          showHovered = showHovered;
+          dateFormat = dateFormat;
+        };
       }
       {
-      # Interface > Status & Location bars
-      General = {};
+        # Interface > Status & Location bars
+        General = {};
       }
       {
-      # View > General
-      General = {};
+        # View > General
+        General = {};
       }
       {
-      # View > Content Display
-      General = {};
-      ContentDisplay = {};
+        # View > Content Display
+        General = {};
+        ContentDisplay = {};
 
-      # View > Icons view mode
-      IconsMode = {};
+        # View > Icons view mode
+        IconsMode = {};
 
-      # View > Compact view mode
-      CompactMode = {};
+        # View > Compact view mode
+        CompactMode = {};
 
-      # View > Details view mode
-      DetailsMode = {};
+        # View > Details view mode
+        DetailsMode = {};
       }
       /*
       {
-    # Context Menu
+        # Context Menu
         # Not sure if I will end up implementing this...
         ContextMenu = {};
         VersionControl = {};
