@@ -283,7 +283,8 @@ in
   # Write the config file
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkIf (cfg.package != null) [ cfg.package ];
-    programs.plasma.configFile."dolphinrc" = {
+    programs.plasma.configFile."dolphinrc" = lib.foldr lib.recursiveUpdate {} [
+      {
       # Interface > Folders & Tabs
       General = with cfg.interface.foldersAndTabs; {
         RememberOpenedTabs = startupLocation == null;
@@ -304,8 +305,8 @@ in
 
       # Interface > Previews
       PreviewSettings.Plugins = cfg.interface.previews;
-    } // {
-
+      }
+      {
       # Interface > Confirmations
       General = with cfg.interface.confirmations; {
         ConfirmClosingMultipleTabs = closingWithMultipleTabs;
@@ -327,16 +328,16 @@ in
         showHovered = showHovered;
         dateFormat = dateFormat;
       };
-    } // {
-
+      }
+      {
       # Interface > Status & Location bars
       General = {};
-    } // {
-
+      }
+      {
       # View > General
       General = {};
-    } // {
-
+      }
+      {
       # View > Content Display
       General = {};
       ContentDisplay = {};
@@ -349,18 +350,17 @@ in
 
       # View > Details view mode
       DetailsMode = {};
-    };
-
-  } // {
+      }
+      /*
+      {
     # Context Menu
-    # Not sure how much of this I will end up implementing...
-    programs.plasma.configFile = {
-      "dolphinrc" = {
+        # Not sure if I will end up implementing this...
         ContextMenu = {};
         VersionControl = {};
       };
-
-      "kservicemenurc".Show = {};
-    };
+      */  
+    ];
+    # (also) Context Menu
+    #programs.plasma.configFile."kservicemenurc".Show = {};
   };
 }
