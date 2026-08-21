@@ -45,9 +45,7 @@ in
         launchInNewTab = mkOption {
           type = types.bool;
           default = false;
-          description = ''
-            When Dolphin is launched externally, it can either open a tab in an existing window or create a new window.
-          '';
+          description = "When Dolphin is launched externally, it can either open a tab in an existing window or create a new window.";
         };
 
         window = {
@@ -55,16 +53,16 @@ in
             type = types.bool;
             default = false;
             description = ''
-              Show the absolute folder path (e.g. /home/user/Documents) in the application title, instead of the basename (e.g Documents).
+              Show the absolute folder path in the application title instead of the basename.
+              true: /home/user/Documents
+              false: Documents
             '';
           };
 
           showFilterBar = mkOption {
             type = types.bool;
             default = false;
-            description = ''
-              Should the Filter Bar be shown by default.
-            '';
+            description = "Should the Filter Bar be shown by default.";
           };
         };
 
@@ -72,17 +70,13 @@ in
           alwaysShow = mkOption {
             type = types.bool;
             default = false;
-            description = ''
-              Should the tab bar always be shown, even when there is only one tab.
-            '';
+            description = "Should the tab bar always be shown, even when there is only one tab.";
           };
 
           closeButtons = mkOption {
             type = types.bool;
             default = true;
-            description = ''
-              Should tabs have a button to close them.
-            '';
+            description = "Should tabs have a button to close them.";
           };
 
           width = mkOption {
@@ -105,9 +99,7 @@ in
           openAtEnd = mkOption {
             type = types.bool;
             default = false;
-            description = ''
-              Should new tabs be placed at end of tab bar, instead of next to current tab.
-            '';
+            description = "Should new tabs be placed at end of tab bar, instead of next to current tab.";
           };
         };
 
@@ -132,9 +124,7 @@ in
           default = mkOption {
             type = types.bool;
             default = false;
-            description = ''
-              Open new windows in split-view mode
-            '';
+            description = "Open new windows in split-view mode";
           };
         };
       };
@@ -172,7 +162,8 @@ in
         default = builtins.filter (i: i != "textthumbnail") plugins;
         example = plugins;
         description = ''
-          List of preview plugins to use. Default is all except "textthumbnail".
+          List of preview plugins to use.
+          Default is all except "textthumbnail".
         '';
         apply = val: builtins.concatStringsSep "," val;
       };
@@ -181,49 +172,37 @@ in
         closingWithMultipleTabs = mkOption {
           type = types.bool;
           default = true;
-          description = ''
-            Confirm closing windows with multiple tabs.
-          '';
+          description = "Confirm closing windows with multiple tabs.";
         };
 
         closingWithTerminal = mkOption {
           type = types.bool;
           default = true;
-          description = ''
-            Confirm closing windows with a program running in the Terminal panel.
-          '';
+          description = "Confirm closing windows with a program running in the Terminal panel.";
         };
 
         openingManyFolders = mkOption {
           type = types.bool;
           default = true;
-          description = ''
-            Confirm opening many folders at once.
-          '';
+          description = "Confirm opening many folders at once.";
         };
 
         openingManyTerminals = mkOption {
           type = types.bool;
           default = true;
-          description = ''
-            Confirm opening many terminals at once.
-          '';
+          description = "Confirm opening many terminals at once.";
         };
         
         administrator = mkOption {
           type = types.bool;
           default = true;
-          description = ''
-            Warn when switching to act as an administrator.
-          '';
+          description = "Warn when switching to act as an administrator.";
         };
         
         renamingFileType = mkOption {
           type = types.bool;
           default = true;
-          description = ''
-            Warn when changing a file's extension.
-          '';
+          description = "Warn when changing a file's extension.";
         };
       };
 
@@ -233,25 +212,19 @@ in
         showPreviews = mkOption {
           type = types.bool;
           default = true;
-          description = ''
-            Enables file previews by default.
-          '';
+          description = "Enables file previews by default.";
         };
 
         autoPlayMedia = mkOption {
           type = types.bool;
           default = false;
-          description = ''
-            For previews of video files, begin playback automatically.
-          '';
+          description = "For previews of video files, begin playback automatically.";
         };
 
         showHovered = mkOption {
           type = types.bool;
           default = true;
-          description = ''
-            Allow hovering over a file to show its information.
-          '';
+          description = "Allow hovering over a file to show its information.";
         };
 
         dateFormat = mkOption {
@@ -297,9 +270,7 @@ in
           editable = mkOption {
             type = types.bool;
             default = false;
-            description = ''
-              Allow the location URI to be manually edited.
-            '';
+            description = "Allow the location URI to be manually edited.";
           };
 
           showFullPath = mkOption {
