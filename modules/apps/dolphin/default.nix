@@ -261,6 +261,49 @@ in
           }.${val};
         };
       };
+
+      bars = {
+        status = mkOption {
+          type = types.enum [ "small" "full" "fullWithZoom" "disabled" ];
+          default = "small";
+          example = "full";
+          description = ''
+            Type of bottom Status bar.
+            Full-sized can optionally include a zoom slider.
+          '';
+          apply = val: {
+            # "Full" has a checkbox to include a zoom slider.
+            # The cleanest way I could think to implement this is with a 4th enum variant, and expose 2 variables in cfg.
+            # If they ever add a second checkbox, we'll need a different approach...
+            size = {
+              "small" = "Small";
+              "full" = "FullWidth";
+              "fullWithZoom" = "FullWidth";
+              "disabled" = "Disabled";
+            }.${val};
+            zoom = val == "fullWithZoom";
+          };
+        };
+        
+        location = {
+          editable = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              Allow the location URI to be manually edited.
+            '';
+          };
+
+          showFullPath = mkOption {
+            type = types.bool;
+            default = false;
+            description = ''
+              Always show the full path inside the location bar.
+              e.g. the special Network folder will show "remote:/"
+            '';
+          };
+        };
+      };
     };
   };
 
@@ -315,7 +358,13 @@ in
       }
       {
         # Interface > Status & Location bars
-        General = {};
+        General = with cfg.interface.bars; {
+          ShowStatusBar = status.size;
+          ShowZoomSlider = status.zoom;
+
+          EditableUrl = location.editable;
+          ShowFullPath = location.showFullPath;
+        };
       }
       {
         # View > General
