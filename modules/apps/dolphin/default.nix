@@ -287,71 +287,64 @@ in
 
     view = {
       general = {
-        # Not completely sold on keeping everything in small categories...
-        displayStyle = {
-          rememberPerFolder = mkOption {
-            type = types.bool;
-            default = false; # Opposite of GlobalViewProps default
-            description = ''
-              Whether the display style mode will be remembered on a per-folder basis.
-              If true, Dolphin will add file system metadata to folders you change the view properties for. If that is not possible, a hidden .directory will be made instead.
-              If false, folders will always use the same view mode. (Except for some special views like Search, Recent Files, or Wastebin, will still use a custom display style)
-            '';
-          };
+        rememberPerFolder = mkOption {
+          type = types.bool;
+          default = false; # Opposite of GlobalViewProps default
+          description = ''
+            Whether the display style mode will be remembered on a per-folder basis.
+            If true, Dolphin will add file system metadata to folders you change the view properties for. If that is not possible, a hidden .directory will be made instead.
+            If false, folders will always use the same view mode. (Except for some special views like Search, Recent Files, or Wastebin, will still use a custom display style)
+          '';
+        };
 
-          iconsModeForMedia = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Use icons view mode for locations which mostly contain media files.";
-          };
+        iconsModeForMedia = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Use icons view mode for locations which mostly contain media files.";
         };
 
         # Browsing
-        browsing = {
-          browseArchives = mkOption {
-            type = types.bool;
-            default = false;
-            description = ''
-              Allow browsing compressed archives as if they were folders.
-              If false, the file will be opened normally in another program.
-            '';
-          };
+        browseArchives = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Allow browsing compressed archives as if they were folders.
+            If false, the file will be opened normally in another program.
+          '';
+        };
 
-          dragOpenFolders = mkOption {
-            type = types.bool;
-            default = false;
-            description = ''
-              Open a folder automatically while dragging an item over it.
-              Similar to MacOS' "Spring Loading" behaviour.
-            '';
-          };
+        dragOpenFolders = mkOption {
+          type = types.bool;
+          default = false;
+          description = ''
+            Open a folder automatically while dragging an item over it.
+            Similar to MacOS' "Spring Loading" behaviour.
+          '';
         };
 
         # Miscellaneous
-        misc = {
-          hoverForInfo = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Show item information on hover.";
-          };
+        hoverForInfo = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Show item information on hover.";
+        };
 
-          selectionMarkers = mkOption {
-            type = types.bool;
-            default = true;
-            description = "Show +/- select button on top-left of hovered files.";
-          };
-          
-          renameInline = mkOption {
-            type = types.bool;
-            default = true;
-            description = "For single items, renaming can either be done inline (next to the icon), or in a dialog box.";
-          };
-          
-          hideBackupFiles = mkOption {
-            type = types.bool;
-            default = false;
-            description = "Hide backup files along with regular hidden files.";
-          };
+        selectionMarkers = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Show +/- select button on top-left of hovered files.";
+        };
+        
+        renameInline = mkOption {
+          type = types.bool;
+          default = true;
+          description = "For single items, renaming can either be done inline (next to the icon), or in a dialog box.";
+        };
+        
+        hideBackupFiles = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Hide backup files along with regular hidden files.";
         };
 
         # Background double-click action
@@ -431,16 +424,16 @@ in
       {
         # View > General
         General = with cfg.view.general; {
-          GlobalViewProps = ! displayStyle.rememberPerFolder; # Invert
-          DynamicView = displayStyle.iconsModeForMedia;
+          GlobalViewProps = ! rememberPerFolder; # Invert
+          DynamicView = iconsModeForMedia;
 
-          BrowseThroughArchives = browsing.browseArchives;
-          AutoExpandFolders = browsing.dragOpenFolders;
+          BrowseThroughArchives = browseArchives;
+          AutoExpandFolders = dragOpenFolders;
 
-          ShowToolTips = misc.hoverForInfo;
-          ShowSelectionToggle = misc.selectionMarkers;
-          RenameInline = misc.renameInline;
-          HideXTrashFile = misc.hideBackupFiles;
+          ShowToolTips = hoverForInfo;
+          ShowSelectionToggle = selectionMarkers;
+          RenameInline = renameInline;
+          HideXTrashFile = hideBackupFiles;
         };
       }
       {
