@@ -348,6 +348,69 @@ in
         };
 
         # Background double-click action
+        backgroundDoubleClick = {
+          action = let
+            # Python-style argument unpacking
+            apply = fn: args:
+              if builtins.length args > 0 then
+                apply (fn (builtins.head args)) (builtins.tail args)
+              else fn; # Ends up being the answer
+
+            entries = builtins.mapAttrs
+              (_: args: apply (k: d: {key=k; description=d;}) args)
+            {
+              # enumVariant     = [ "config_value"           "Description" ];
+              "none"            = [ "none"                   "No action" ];
+              "custom"          = [ "CUSTOM_COMMAND"         "Run a shell command (set in `customCommand option`)" ];
+              "newTab"          = [ "new_tab"                "New Tab" ];
+              "newWindow"       = [ "file_new"               "New Window" ];
+              "placesPanel"     = [ "show_places_panel"      "Places panel" ];
+              "infoPanel"       = [ "show_information_panel" "Information panel" ];
+              "foldersPanel"    = [ "show_folders_panel"     "Folders panel" ];
+              "terminalPanel"   = [ "show_terminal_panel"    "Terminal panel" ];
+              "terminalOpen"    = [ "open_terminal"          "Open Terminal externally" ];
+              "goUp"            = [ "go_up"                  "Parent folder" ];
+              "goBack"          = [ "go_back"                "Previous location" ];
+              "goHome"          = [ "go_home"                "Home location" ];
+              "refresh"         = [ "view_redisplay"         "Refresh" ];
+              "split"           = [ "split_view"             "Toggle split view" ];
+              "selectAll"       = [ "edit_select_all"        "Select all items" ];
+              "selectionMode"   = [ "toggle_selection_mode"  "Toggle Selection Mode" ];
+              "createFolder"    = [ "create_dir"             "Create folder" ];
+              "createFile"      = [ "create_file"            "Create new file" ];
+              "showPreviews"    = [ "show_preview"           "Toggle Icon mode previews" ];
+              "showHiddenFiles" = [ "show_hidden_files"      "Toggle hidden files" ];
+              "group"           = [ "show_in_groups"         "Show in Groups" ];
+              "adjustView"      = [ "view_properties"        "Adjust View Display Style" ];
+            };
+
+            # Bullet-pointed list for the documentation
+            descriptionDocs = lib.concatMapAttrsStringSep # what a mouthful!
+              "\n"
+              (name: val: "- `${name}`: ${val.description}")
+              entries;
+
+          in mkOption {
+            type = types.enum (lib.attrNames entries);
+            default = "selectAll";
+            example = "showHiddenFiles";
+            description = ''
+              Action to perform when double-clicking the window background.
+            ''+descriptionDocs;
+            apply = val: entries.${val}.key;
+          };
+
+          customCommand = mkOption {
+            type = types.nullOr types.str;
+            default = null;
+            example = "xdg-open {path}";
+            description = ''
+              Shell command to execute when option `action = "custom";`
+
+              Tip: `{path}` will be substituted with the current location path.
+            '';
+          };
+            };
       };
 
       contentDisplay = {
@@ -434,6 +497,9 @@ in
           ShowSelectionToggle = selectionMarkers;
           RenameInline = renameInline;
           HideXTrashFile = hideBackupFiles;
+
+          DoubleClickViewAction = backgroundDoubleClick.action;
+          DoubleClickViewCustomAction = backgroundDoubleClick.customCommand;
         };
       }
       {
