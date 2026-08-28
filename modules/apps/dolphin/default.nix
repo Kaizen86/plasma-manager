@@ -320,7 +320,7 @@ in
           default = false;
           description = ''
             Open a folder automatically while dragging an item over it.
-            Similar to MacOS' "Spring Loading" behaviour.
+            Similar to macOS Finder's "Spring-Loaded Folders" feature.
           '';
         };
 
