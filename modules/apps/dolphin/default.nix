@@ -56,8 +56,8 @@ in
             default = false;
             description = ''
               Show the absolute folder path in the application title instead of the basename.
-              - true: /home/user/Documents
-              - false: Documents
+              - `true`: /home/user/Documents
+              - `false`: Documents
             '';
           };
 
@@ -87,9 +87,9 @@ in
             example = "fixed";
             description = ''
               Behaviour for how wide each tab should be, also known as Tab Style.
-              - adapt: Tab width adapts to folder name
-              - fixed: Tabs all have the same fixed width
-              - wide: Tabs span the available width
+              - `adapt`: Tab width adapts to folder name
+              - `fixed`: Tabs all have the same fixed width
+              - `wide`: Tabs span the available width
             '';
             apply = val: {
               "adapt" = "AutoSize";
@@ -112,9 +112,9 @@ in
             example = "inactive";
             description = ''
               When leaving split-view mode, which pane should be closed.
-              - active: Close the selected pane
-              - inactive: Close the opposite pane
-              - right: Always close the right pane
+              - `active`: Close the selected pane
+              - `inactive`: Close the opposite pane
+              - `right`: Always close the right pane
             '';
             apply = val: {
               "active" = "ActiveView";
@@ -235,8 +235,8 @@ in
           example = "short";
           description = ''
             Dates can either be displayed in a long or short format.
-            - long: Wednesday, 28 February 2024 at 10:00
-            - short: 28/02/2024 at 10:00
+            - `long`: Wednesday, 28 February 2024 at 10:00
+            - `short`: 28/02/2024 at 10:00
           '';
           apply = val: {
             "long" = "LongFormat";
@@ -294,8 +294,8 @@ in
           default = false; # Opposite of GlobalViewProps default
           description = ''
             Whether the display style mode will be remembered on a per-folder basis.
-            - true: Dolphin will add file system metadata to folders you change the view properties for. If that is not possible, a hidden .directory will be made instead.
-            - false: folders will always use the same view mode. (Except for some special views like Search, Recent Files, or Wastebin, will still use a custom display style)
+            - `true`: Dolphin will add file system metadata to folders you change the view properties for. If that is not possible, a hidden .directory will be made instead.
+            - `false`: folders will always use the same view mode. (Except for some special views like Search, Recent Files, or Wastebin, will still use a custom display style)
           '';
         };
 
@@ -422,9 +422,9 @@ in
           example = "caseInsensitive";
           description = ''
             Order to sort items in.
-            - natural: File2, file2, File10, file10
-            - caseInsensitive: File10, file10, File2, file2
-            - caseSensitive: File10, File2, file10, file2
+            - `natural`: File2, file2, File10, file10
+            - `caseInsensitive`: File10, file10, File2, file2
+            - `caseSensitive`: File10, File2, file10, file2
             '';
           apply = val: {
             "natural" = "NaturalSorting";
@@ -440,9 +440,9 @@ in
             example = "size";
             description = ''
               How to display the size of directories.
-              - none: Show no size.
-              - count: Show number of items.
-              - size: Show size of contents up to N levels deep. (see maxDepth)
+              - `none`: Show no size.
+              - `count`: Show number of items.
+              - `size`: Show size of contents up to N levels deep. (see maxDepth)
             '';
             apply = val: {
               "none" = "None";
