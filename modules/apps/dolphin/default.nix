@@ -84,7 +84,6 @@ in
           width = mkOption {
             type = types.enum [ "adapt" "fixed" "wide" ];
             default = "adapt";
-            example = "fixed";
             description = ''
               Behaviour for how wide each tab should be, also known as Tab Style.
               - `adapt`: Tab width adapts to folder name
@@ -109,7 +108,6 @@ in
           close = mkOption {
             type = types.enum [ "active" "inactive" "right" ];
             default = "active";
-            example = "inactive";
             description = ''
               When leaving split-view mode, which pane should be closed.
               - `active`: Close the selected pane
@@ -232,7 +230,6 @@ in
         dateFormat = mkOption {
           type = types.enum [ "long" "short" ];
           default = "long";
-          example = "short";
           description = ''
             Dates can either be displayed in a long or short format.
             - `long`: Wednesday, 28 February 2024 at 10:00
@@ -249,7 +246,6 @@ in
         status = mkOption {
           type = types.enum [ "small" "full" "fullWithZoom" "disabled" ];
           default = "small";
-          example = "full";
           description = ''
             Type of bottom Status bar.
             Full-sized can optionally include a zoom slider.
@@ -395,7 +391,6 @@ in
           in mkOption {
             type = types.enum (lib.attrNames entries);
             default = "selectAll";
-            example = "showHiddenFiles";
             description = ''
               Action to perform when double-clicking the window background.
             ''+descriptionDocs;
@@ -419,7 +414,6 @@ in
         sortMode = mkOption {
           type = types.enum [ "natural" "caseInsensitive" "caseSensitive" ];
           default = "natural";
-          example = "caseInsensitive";
           description = ''
             Order to sort items in.
             - `natural`: File2, file2, File10, file10
@@ -437,7 +431,6 @@ in
           mode = mkOption {
             type = types.enum [ "none" "count" "size" ];
             default = "count";
-            example = "size";
             description = ''
               How to display the size of directories.
               - `none`: Show no size.
@@ -468,7 +461,6 @@ in
         permissionsStyle = mkOption {
           type = types.enum [ "symbolic" "numeric" "combined" ];
           default = "symbolic";
-          example = "combined";
           description = ''
             Format used for displaying UNIX permissions.
             - `symbolic`: drwxr-xr-x
@@ -485,7 +477,6 @@ in
         elideLongNamesAt = mkOption {
           type = types.enum [ "middle" "right" ];
           default = "middle";
-          example = "right";
           description = ''
             Where to elide (shorten) long file names. Can either happen in the middle or near the end.
             - `middle`: Some very ... name.txt
