@@ -458,6 +458,44 @@ in
             description = "Maximum folder scan depth when option `mode`=\"size\". Must be between 1-20.";
           };
         };
+
+        relativeDates = mkOption {
+          type = types.bool;
+          default = true;
+          description = "Whether item dates should be shown relative to the current time (e.g. `30 minutes ago`) or as an absolute timestamp (e.g. `29/08/2026 16:40`).";
+        };
+
+        permissionsStyle = mkOption {
+          type = types.enum [ "symbolic" "numeric" "combined" ];
+          default = "symbolic";
+          example = "combined";
+          description = ''
+            Format used for displaying UNIX permissions.
+            - `symbolic`: drwxr-xr-x
+            - `numeric`: 755
+            - `combined`: drwxr-xr-x (755)
+          '';
+          apply = val: {
+            "symbolic" = "SymbolicFormat";
+            "numeric" = "NumericFormat";
+            "combined" = "CombinedFormat";
+          }.${val};
+        };
+
+        elideLongNamesAt = mkOption {
+          type = types.enum [ "middle" "right" ];
+          default = "middle";
+          example = "right";
+          description = ''
+            Where to elide (shorten) long file names. Can either happen in the middle or near the end.
+            - `middle`: Some very ... name.txt
+            - `right: Some very long....txt
+          '';
+          apply = val: {
+            "middle" = "Middle";
+            "right" = "Right";
+          }.${val};
+        };
       };
 
       modes = {
@@ -551,6 +589,10 @@ in
         ContentDisplay = {
           DirectorySizeMode = folderSize.mode;
           RecursiveDirectorySizeLimit = folderSize.maxDepth;
+
+          UseShortRelativeDates = relativeDates;
+          UsePermissionsFormat = permissionsStyle;
+          ElidingMode = elideLongNamesAt;
         };
       })
       {
