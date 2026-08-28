@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 # Default values are set for almost every option, mirroring Dolphin's defaults.
 # I chose to do this because of a limitation in plasma-manager; setting a value
@@ -9,6 +9,7 @@
 
 let
   cfg = config.programs.dolphin;
+  opt = options.programs.dolphin;
 in
 {
   options.programs.dolphin = with lib; {
@@ -411,7 +412,7 @@ in
               Tip: `{path}` will be substituted with the current location path.
             '';
           };
-            };
+        };
       };
 
       contentDisplay = {
@@ -528,5 +529,17 @@ in
     ];
     # (also) Context Menu
     #programs.plasma.configFile."kservicemenurc".Show = {};
+  
+
+    assertions = with lib; [
+      (let
+        path = [ "view" "general" "backgroundDoubleClick" ];
+        c = getAttrFromPath path cfg;
+        o = getAttrFromPath path opt;
+       in {
+        assertion = !(c.action == "custom" && c.command == null);
+        message = "${showOption o.action.loc} is set to \"custom\", but ${showOption o.customCommand.loc} is null";
+      })
+    ];
   };
 }
