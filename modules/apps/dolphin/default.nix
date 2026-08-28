@@ -416,7 +416,48 @@ in
       };
 
       contentDisplay = {
+        sortMode = mkOption {
+          type = types.enum [ "natural" "caseInsensitive" "caseSensitive" ];
+          default = "natural";
+          example = "caseInsensitive";
+          description = ''
+            Order to sort items in.
+            - natural: File2, file2, File10, file10
+            - caseInsensitive: File10, file10, File2, file2
+            - caseSensitive: File10, File2, file10, file2
+            '';
+          apply = val: {
+            "natural" = "NaturalSorting";
+            "caseSensitive" = "CaseSensitiveSorting";
+            "caseInsensitive" = "CaseInsensitiveSorting";
+          }.${val};
+        };
 
+        folderSize = {
+          mode = mkOption {
+            type = types.enum [ "none" "count" "size" ];
+            default = "count";
+            example = "size";
+            description = ''
+              How to display the size of directories.
+              - none: Show no size.
+              - count: Show number of items.
+              - size: Show size of contents up to N levels deep. (see maxDepth)
+            '';
+            apply = val: {
+              "none" = "None";
+              "count" = "ContentCount";
+              "size" = "ContentSize";
+            }.${val};
+          };
+
+          maxDepth = mkOption {
+            type = types.ints.between 1 20;
+            default = 10;
+            example = 20;
+            description = "Maximum folder scan depth when option `mode`=\"size\". Must be between 1-20.";
+          };
+        };
       };
 
       modes = {
@@ -504,11 +545,15 @@ in
           DoubleClickViewCustomAction = backgroundDoubleClick.customCommand;
         };
       }
-      {
+      (with cfg.view.contentDisplay; {
         # View > Content Display
-        General = {};
-        ContentDisplay = {};
-
+        General.SortingChoice = sortMode;
+        ContentDisplay = {
+          DirectorySizeMode = folderSize.mode;
+          RecursiveDirectorySizeLimit = folderSize.maxDepth;
+        };
+      })
+      {
         # View > Icons view mode
         IconsMode = {};
 
