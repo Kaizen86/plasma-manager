@@ -528,14 +528,58 @@ in
           icons = {
             iconSize.default = KIconLoader.SizeMedium;
             previewSize.default = KIconLoader.SizeHuge;
+
+            labelMinWidth = mkOption {
+              type = types.enum [ "small" "medium" "large" "huge" ];
+              default = "medium";
+              description = "Minimum width reserved for text beneath icons.";
+              apply = val: {
+                "small" = 0;
+                "medium" = 1;
+                "large" = 2;
+                "huge" = 3;
+              }.${val};
+            };
+
+            labelMaxLines = mkOption {
+              type = types.ints.between 0 5;
+              default = 3;
+              description = "Maximum number of lines for text beneath icons.";
+            };
           };
+
           compact = {
             iconSize.default = KIconLoader.SizeSmall;
             previewSize.default = KIconLoader.SizeLarge;
+
+            labelMaxWidth = mkOption {
+              type = types.enum [ "unlimited" "small" "medium" "large" ];
+              default = "unlimited";
+              description = "Maximum width reserved for text beneath icons.";
+              apply = val: {
+                "unlimited" = 0;
+                "small" = 1;
+                "medium" = 2;
+                "large" = 3;
+              }.${val};
+            };
           };
+
           details = {
             iconSize.default = KIconLoader.SizeSmall;
             previewSize.default = KIconLoader.SizeLarge;
+
+            expandableFolders = mkOption {
+              type = types.bool;
+              default = true;
+              description = "Allow expanding folders into a tree view, where sub-folders can be further expanded.";
+            };
+
+            openByClickingAnywhereOnRow = mkOption {
+              type = types.bool;
+              default = true;
+              description = "Open files and folders by clicking anywhere on the row, or only on the icon or name.";
+            };
           };
         };
     };
@@ -639,21 +683,34 @@ in
             UseSystemFont = loc.font == null;
             ViewFont = loc.font;
           })
-          {
-            IconsMode = cfg.view.modes.icons;
-            CompactMode = cfg.view.modes.compact;
-            DetailsMode = cfg.view.modes.details;
-          }
+          (with cfg.view.modes; {
+            IconsMode = icons;
+            CompactMode = compact;
+            DetailsMode = details;
+          })
         )
+
         # Mode-specific settings
-        {
-          # View > Icons view mode (defaults)
-          IconsMode = with cfg.view.modes.icons; {};
-          # View > Compact view mode (defaults)
-          CompactMode = with cfg.view.modes.compact; {};
-          # View > Details view mode  (defaults)
-          DetailsMode = with cfg.view.modes.details; {};
-        }
+        (with cfg.view.modes; {
+          # View > Icons view mode
+          IconsMode = {
+            TextWidthIndex = icons.labelMinWidth;
+            MaximumTextLines = icons.labelMaxLines;
+          };
+
+          # View > Compact view mode
+          CompactMode.MaximumTextWidthIndex = compact.labelMaxWidth;
+
+          # View > Details view mode
+          DetailsMode = let
+            padding = if details.openByClickingAnywhereOnRow then 20 else 0;
+          in {
+            ExpandableFolders = details.expandableFolders;
+            HighlightEntireRow = details.openByClickingAnywhereOnRow;
+            LeftPadding = padding;
+            RightPadding = padding;
+          };
+        })
       )
       /*
       {
