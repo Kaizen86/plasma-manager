@@ -41,7 +41,7 @@ in
           example = "/home/user";
           description = ''
             The absolute folder path to open on launch.
-            
+
             If set to null, the folders, tabs, and window state from last time will be restored.
           '';
         };
@@ -131,7 +131,7 @@ in
         };
       };
 
-      previews = let 
+      previews = let
         plugins = [
           "appimagethumbnail"
           "audiothumbnail"
@@ -158,7 +158,7 @@ in
           "textthumbnail"
           "ffmpegthumbs"
         ];
-        
+
       in mkOption {
         type = types.listOf types.str;
         default = builtins.filter (i: i != "textthumbnail") plugins;
@@ -194,13 +194,13 @@ in
           default = true;
           description = "Confirm opening many terminals at once.";
         };
-        
+
         administrator = mkOption {
           type = types.bool;
           default = true;
           description = "Warn when switching to act as an administrator.";
         };
-        
+
         renamingFileType = mkOption {
           type = types.bool;
           default = true;
@@ -265,7 +265,7 @@ in
             zoom = val == "fullWithZoom";
           };
         };
-        
+
         location = {
           editable = mkOption {
             type = types.bool;
@@ -334,13 +334,13 @@ in
           default = true;
           description = "Show +/- select button on top-left of hovered files.";
         };
-        
+
         renameInline = mkOption {
           type = types.bool;
           default = true;
           description = "For single items, renaming can either be done inline (next to the icon), or in a dialog box.";
         };
-        
+
         hideBackupFiles = mkOption {
           type = types.bool;
           default = false;
@@ -385,13 +385,13 @@ in
             };
 
             # Bullet-pointed list for the documentation
-            descriptionDocs = lib.concatMapAttrsStringSep # what a mouthful!
+            descriptionDocs = concatMapAttrsStringSep # what a mouthful!
               "\n"
               (name: val: "- `${name}`: ${val.description}")
               entries;
 
           in mkOption {
-            type = types.enum (lib.attrNames entries);
+            type = types.enum (attrNames entries);
             default = "selectAll";
             description = ''
               Action to perform when double-clicking the window background.
@@ -490,6 +490,8 @@ in
           }.${val};
         };
       };
+
+      # src/settings/dolphin_*modesettings.kcfg
 
       modes = let
         #validSizes = types.enum [ 16 22 32 48 64 80 96 112 128 144 160 176 192 208 224 240 256 ];
@@ -660,11 +662,11 @@ in
         ContextMenu = {};
         VersionControl = {};
       };
-      */  
+      */
     ];
     # (also) Context Menu
     #programs.plasma.configFile."kservicemenurc".Show = {};
-  
+
 
     assertions = with lib; [
       (let
