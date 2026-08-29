@@ -8,6 +8,8 @@
 # module will be overwritten with the defaults.
 
 let
+  qFontSubmodule = lib.types.submodule {}; # TODO
+
   cfg = config.programs.dolphin;
   opt = options.programs.dolphin;
 in
@@ -489,11 +491,51 @@ in
         };
       };
 
-      modes = {
-        icons = {};
-        compact = {};
-        details = {};
-      };
+      modes = let
+        #validSizes = types.enum [ 16 22 32 48 64 80 96 112 128 144 160 176 192 208 224 240 256 ];
+        validSizes = types.ints.between 16 256;
+        # https://github.com/KDE/kiconthemes/blob/master/src/kiconloader.h#L188
+        KIconLoader = {
+          SizeSmall = 16;
+          SizeSmallMedium = 22;
+          SizeMedium = 32;
+          SizeLarge = 48;
+          SizeHuge = 64;
+          SizeEnormous = 128;
+        };
+      in mapAttrs
+        (name: extends: recursiveUpdate
+          # A few options are common for all modes, so we can save some boilerplate
+          {
+            iconSize = mkOption {
+              type = validSizes;
+              description = "Icon size when previews are disabled.";
+            };
+            previewSize = mkOption {
+              type = validSizes;
+              description = "Icon size when previews are enabled.";
+            };
+            font = mkOption {
+              type = types.nullOr (types.submodule qFontSubmodule);
+              default = null;
+              apply = font: if font == null then null else ''"${qfont.fontToString font}"'';
+            };
+          } extends
+        )
+        {
+          icons = {
+            iconSize.default = KIconLoader.SizeMedium;
+            previewSize.default = KIconLoader.SizeHuge;
+          };
+          compact = {
+            iconSize.default = KIconLoader.SizeSmall;
+            previewSize.default = KIconLoader.SizeLarge;
+          };
+          details = {
+            iconSize.default = KIconLoader.SizeSmall;
+            previewSize.default = KIconLoader.SizeLarge;
+          };
+        };
     };
   };
 
@@ -586,16 +628,31 @@ in
           ElidingMode = elideLongNamesAt;
         };
       })
-      {
-        # View > Icons view mode
-        IconsMode = {};
-
-        # View > Compact view mode
-        CompactMode = {};
-
-        # View > Details view mode
-        DetailsMode = {};
-      }
+      (lib.recursiveUpdate
+        (lib.mapAttrs
+          (_: loc: {
+            # All modes implement these settings
+            IconSize = loc.iconSize;
+            PreviewSize = loc.previewSize;
+            UseSystemFont = loc.font == null;
+            ViewFont = loc.font;
+          })
+          {
+            IconsMode = cfg.view.modes.icons;
+            CompactMode = cfg.view.modes.compact;
+            DetailsMode = cfg.view.modes.details;
+          }
+        )
+        # Mode-specific settings
+        {
+          # View > Icons view mode (defaults)
+          IconsMode = with cfg.view.modes.icons; {};
+          # View > Compact view mode (defaults)
+          CompactMode = with cfg.view.modes.compact; {};
+          # View > Details view mode  (defaults)
+          DetailsMode = with cfg.view.modes.details; {};
+        }
+      )
       /*
       {
         # Context Menu
