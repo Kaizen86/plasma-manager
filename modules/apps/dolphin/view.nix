@@ -171,7 +171,6 @@ in
           maxDepth = mkOption {
             type = types.ints.between 1 20;
             default = 10;
-            example = 20;
             description = "Maximum folder scan depth when option `mode`=\"size\". Must be between 1-20.";
           };
         };
